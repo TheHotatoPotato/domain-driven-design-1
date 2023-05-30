@@ -13,16 +13,16 @@ Use Cases / Requirements:
 - User can view the history of their todo list for any given day
 '''
 
-@dataclass(frozen=True)
+@dataclass()
 class Item:
     title: str
     body: str
     completed: bool = False
     day_added: date = date.today()
 
-class List:
+class ToDoList:
     def __init__(self):
-        self.items = []
+        self.items: List[Item] = []
 
     def add_item(self, item: Item):
         self.items.append(item)
