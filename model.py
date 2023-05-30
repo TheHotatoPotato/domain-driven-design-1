@@ -20,7 +20,7 @@ class Item:
     completed: bool = False
     day_added: date = date.today()
 
-class List:
+class ToDoList:
     def __init__(self):
         self.items: List[Item] = []
 
