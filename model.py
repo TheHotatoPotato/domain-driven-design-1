@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from typing import Optional, List, Set
 
@@ -13,37 +13,39 @@ Use Cases / Requirements:
 - User can view the history of their todo list for any given day
 '''
 
-@dataclass()
+@dataclass
 class Item:
+    item_id: str
     title: str
     body: str
     completed: bool = False
-    day_added: date = date.today()
+    date_created: date = field(default_factory=date.today)
 
+@dataclass(frozen=True)
+class ToDoListHistory:
+    date_created: date
+    items: List[Item]
+
+@dataclass
 class ToDoList:
-    def __init__(self):
-        self.items: List[Item] = []
+    to_do_id: str
+    date_created: date = field(default_factory=date.today)
+    items: List[Item] = field(default_factory=list)
 
     def add_item(self, item: Item):
         self.items.append(item)
+        
 
-    def edit_item(self, item: Item, new_item: Item):
-        self.items[self.items.index(item)] = new_item
+    def edit_item(self, edited_item: Item):
+        for item in self.items:
+            if item.item_id == edited_item.id:
+                item.title = edited_item.title
+                item.body = edited_item.body
 
-    def delete_item(self, item: Item):
-        self.items.remove(item)
+    def delete_item(self, to_delete_item: Item):
+        self.items.remove(to_delete_item)
 
-    def complete_item(self, item: Item):
-        item.completed = True
-
-    def reorder_item(self, item: Item, new_index: int):
-        self.items.remove(item)
-        self.items.insert(new_index, item)
-
-    @property
-    def get_history(self, date: date):
-        return [item for item in self.items if item.day_added == date]
-
-    @property
-    def get_items(self):
-        return self.items
+    def complete_item(self, to_complete_item: Item):
+        for index, item in enumerate(self.items):
+            if item.item_id == to_complete_item.item_id:
+                self.items[index].completed = True
