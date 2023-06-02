@@ -29,10 +29,12 @@ class ToDoListHistory:
 @dataclass
 class ToDoList:
     to_do_id: str
-    items: List[Item] = []
+    date_created: date = field(default_factory=date.today)
+    items: List[Item] = field(default_factory=list)
 
     def add_item(self, item: Item):
         self.items.append(item)
+        
 
     def edit_item(self, edited_item: Item):
         for item in self.items:
@@ -47,7 +49,3 @@ class ToDoList:
         for index, item in enumerate(self.items):
             if item.item_id == to_complete_item.item_id:
                 self.items[index].completed = True
-
-    @property
-    def get_items(self):
-        return self.items
